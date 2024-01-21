@@ -1,18 +1,64 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './cartstyle.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../redux/features/cartSlice';
+import { addToCart, removeToCart, removeSingleItems, emptyCart } from '../redux/features/cartSlice';
 
 const CartDetails = () => {
 
     const { carts } = useSelector(state => state.allCart);
-    console.log(carts);
+
+    const [totalprice,setPrice] = useState(0);
+    const [totalQuantity, setTotalQuantity] = useState(0);
 
     const dispatch = useDispatch();
     //add to cart
     const handleIncrement = e => {
         dispatch(addToCart(e));
     }
+
+    //remove to cart
+    const handleDecrement = e => {
+        dispatch(removeToCart(e));
+    }
+
+    // remove singleItems
+    const handleSingleDecrement = e => {
+        dispatch(removeSingleItems(e));
+    }
+
+    //Clear cart
+    const emptycart = ()=>{
+        dispatch(emptyCart())
+
+    }
+
+    //count total 
+    const total = () => {
+        let totalprice = 0;
+        carts.map((element, index) => {
+            totalprice = element.price * element.qnty + totalprice;
+            return null;
+        });
+        setPrice(totalprice);
+    }
+
+    // count total quantity
+    const countquantity = ()=>{
+        let totalquantity = 0;
+        carts.map((ele,ind)=>{
+            totalquantity = ele.qnty + totalquantity
+            return null;
+        });
+        setTotalQuantity(totalquantity)
+    }  
+    
+    useEffect(() => {
+        total();
+    }, [total]);
+
+    useEffect(()=>{
+        countquantity()
+    },[countquantity])
 
     return (
         <>
@@ -25,7 +71,10 @@ const CartDetails = () => {
                                     Cart Calculation{carts.length > 0 ? `(${carts.length})` : ''}
                                 </h5>
                                 {
-                                    carts.length > 0 ? <button className='btn btn-danger mt-0 btn-sm'><i className='fa fa-trash-alt mr-2'></i><span>Empty Cart</span></button> : ""
+                                    carts.length > 0 ? <button className='btn btn-danger mt-0 btn-sm'
+                                    onClick={emptycart}
+                                    ><i className='fa fa-trash-alt mr-2'></i><span>EmptyCart</span></button>
+                                        : ""
                                 }
                             </div>
                             
@@ -60,17 +109,19 @@ const CartDetails = () => {
                                         {
                                             carts.map((data, index) => {
                                                 return (
-                                                    <>
+                                                    <React.Fragment key={index}>
                                                         <tr>
                                                             <td>
-                                                                <button className='prdct-delete'><i className='fa fa-trash-alt mr-2'></i></button>
+                                                            <button className='prdct-delete'
+                                                                    onClick={()=>handleDecrement(data.id)}
+                                                                    ><i className='fa fa-trash-alt mr-2'></i></button>
                                                             </td>
                                                             <td><div className='product-img'><img src={data.imgdata} alt=''/></div></td>
                                                             <td><div className='product-name'><p>{data.dish}</p></div></td>
                                                             <td>{data.price}</td>
                                                             <td>
                                                                 <div className='prdct-qty-container'>
-                                                                    <button className='prdct-qty-btn' type='button'>
+                                                                    <button className='prdct-qty-btn' type='button' onClick={ data.qnty <= 1 ? () => handleDecrement(data.id) : () => handleSingleDecrement(data)}>
                                                                         <i className='fa fa-minus'></i>
                                                                     </button>
                                                                     <input type='text' className='qty-input-box' value={data.qnty} name='' id=''/>
@@ -83,7 +134,7 @@ const CartDetails = () => {
                                                                 {data.qnty * data.price}
                                                             </td>
                                                         </tr>
-                                                    </>
+                                                    </React.Fragment>
                                                 )
                                             })
                                         }
@@ -92,8 +143,8 @@ const CartDetails = () => {
                                         <tr>
                                             <th>&nbsp;</th>
                                             <th colSpan={3}>&nbsp;</th>
-                                            <th>Item in Cart<span className='ml-2 mr-2'>:</span><span className='text-danger'>4</span></th>
-                                            <th className='text-right'>Total Price<span className='ml-2 mr-2'>:</span><span className='text-danger'>800</span></th>
+                                            <th>Item in Cart<span className='ml-2 mr-2'>:</span><span className='text-danger'>{totalQuantity}</span></th>
+                                            <th className='text-right'>Total Price<span className='ml-2 mr-2'>:</span><span className='text-danger'>$ {totalprice}</span></th>
                                         </tr>
                                     </tfoot>
                                 </table>
