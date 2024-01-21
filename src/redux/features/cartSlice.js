@@ -10,7 +10,15 @@ const cartSlice = createSlice({
     reducers: {
         //add to cart
         addToCart: (state, action) => {
-            console.log("action: ", action);
+            const IteamIndex = state.carts.findIndex((iteam) =>iteam.id === action.payload.id);
+
+            if(IteamIndex >= 0){
+                state.carts[IteamIndex].qnty +=1;
+            }else {
+                const temp = {...action.payload, qnty:1}
+                state.carts = [...state.carts, temp]
+            }
+            
         }
     }
 });

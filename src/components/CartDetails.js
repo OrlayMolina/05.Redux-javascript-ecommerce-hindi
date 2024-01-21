@@ -1,8 +1,19 @@
 import React from 'react'
 import './cartstyle.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../redux/features/cartSlice';
 
 const CartDetails = () => {
-    const arr = [0,1];
+
+    const { carts } = useSelector(state => state.allCart);
+    console.log(carts);
+
+    const dispatch = useDispatch();
+    //add to cart
+    const handleIncrement = e => {
+        dispatch(addToCart(e));
+    }
+
     return (
         <>
             <div className='row justify-content-center m-0'>
@@ -11,10 +22,10 @@ const CartDetails = () => {
                         <div className='card-header bg-dark p-3'>
                             <div className='card-header-flex'>
                                 <h5 className='text-white m-0'>
-                                    Cart Calculation(1)
+                                    Cart Calculation{carts.length > 0 ? `(${carts.length})` : ''}
                                 </h5>
                                 {
-                                    arr.length > 0 ? <button className='btn btn-danger mt-0 btn-sm'><i className='fa fa-trash-alt mr-2'></i><span>Empty Cart</span></button> : ""
+                                    carts.length > 0 ? <button className='btn btn-danger mt-0 btn-sm'><i className='fa fa-trash-alt mr-2'></i><span>Empty Cart</span></button> : ""
                                 }
                             </div>
                             
@@ -22,7 +33,7 @@ const CartDetails = () => {
 
                         <div className='card-body p-0'>
                             {
-                                arr.length === 0 ? <table className='table cart-table mb-0'>
+                                carts.length === 0 ? <table className='table cart-table mb-0'>
                                     <tbody>
                                         <tr>
                                             <td colSpan={6}>
@@ -47,29 +58,29 @@ const CartDetails = () => {
                                     </thead>
                                     <tbody>
                                         {
-                                            arr.map((data, index) => {
+                                            carts.map((data, index) => {
                                                 return (
                                                     <>
                                                         <tr>
                                                             <td>
                                                                 <button className='prdct-delete'><i className='fa fa-trash-alt mr-2'></i></button>
                                                             </td>
-                                                            <td><div className='product-img'><img src='/logo192.png' alt=''/></div></td>
-                                                            <td><div className='product-name'><p>punjabi</p></div></td>
-                                                            <td>300</td>
+                                                            <td><div className='product-img'><img src={data.imgdata} alt=''/></div></td>
+                                                            <td><div className='product-name'><p>{data.dish}</p></div></td>
+                                                            <td>{data.price}</td>
                                                             <td>
                                                                 <div className='prdct-qty-container'>
                                                                     <button className='prdct-qty-btn' type='button'>
                                                                         <i className='fa fa-minus'></i>
                                                                     </button>
-                                                                    <input type='text' className='qty-input-box' value={1} name='' id=''/>
-                                                                    <button className='prdct-qty-btn' type='button'>
+                                                                    <input type='text' className='qty-input-box' value={data.qnty} name='' id=''/>
+                                                                    <button className='prdct-qty-btn' type='button' onClick={() => handleIncrement(data)}>
                                                                         <i className='fa fa-plus'></i>
                                                                     </button>
                                                                 </div>
                                                             </td>
                                                             <td className='text-right'>
-                                                                400
+                                                                {data.qnty * data.price}
                                                             </td>
                                                         </tr>
                                                     </>
