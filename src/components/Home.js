@@ -28,17 +28,17 @@ const Home = () => {
                                         {/* first row */}
                                         <div className='upper_data d-flex justify-content-between align-items-center'>
                                             <h4 className='mt-2'>
-                                                punjabi
+                                                {element.dish}
                                             </h4>
-                                            <span>3.8&nbsp;★</span>
+                                            <span>{element.rating}&nbsp;★</span>
                                         </div>
 
                                         {/* second row */}
                                         <div className='lower_data d-flex justify-content-between'>
                                             <h5>
-                                                North Indian. Biryani, Mughlai
+                                                {element.address}
                                             </h5>
-                                            <span>300</span>
+                                            <span>{element.price}</span>
                                         </div>
                                         {/* last row */}
                                         <div className='extra'>
@@ -46,14 +46,14 @@ const Home = () => {
                                         </div>
 
                                         <div className='last_data d-flex justify-content-between align-items-center'>
-                                            <img src='/logo192.png' className='limg' alt='' />
+                                            <img src={element.arrimg} className='limg' alt='' />
                                             <Button 
                                                 style={{ width: "150px", background: "#ff3054", border: "none" }} variant='outline-light'
                                                 className='mt-2 mb-2'
                                             >   
                                                 Add to Cart
                                             </Button>
-                                            <img src='/logo192.png' className='laimg' alt='' />
+                                            <img src={element.delimg} className='laimg' alt='' />
                                         </div>
 
                                     </div>
