@@ -1,8 +1,12 @@
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 const Headers = () => {
+
+    const cartData = useSelector(state => state.allCart);
+    console.log(cartData);
     return (
         <>
             <Navbar style={{height: "60px", background: "black", color: "white"}}>
