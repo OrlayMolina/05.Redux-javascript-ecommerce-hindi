@@ -13,7 +13,7 @@ const Home = () => {
 
     // add to Cart
     const send = e => {
-        console.log("first", e);
+        dispatch(addToCart(e));
     }
     return (
         <>
